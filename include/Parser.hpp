@@ -4,4 +4,6 @@
 
 #include <string>
 
-Instancia leer_instancia(const std::string& ruta_archivo);
+using namespace std;
+
+Instancia leer_instancia(const string& ruta_archivo);

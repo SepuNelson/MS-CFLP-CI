@@ -5,9 +5,11 @@
 
 #include <string>
 
+using namespace std;
+
 struct ResultadoFactibilidad {
     bool factible = false;
-    std::string mensaje;
+    string mensaje;
 };
 
 bool cumple_dimensiones(const Instancia& instancia, const Solucion& solucion);
