@@ -2,12 +2,11 @@
 
 #include <stdexcept>
 
+using namespace std;
+
 Solucion crear_solucion_vacia(const Instancia& instancia) {
     Solucion solucion;
-    solucion.envios.assign(
-        instancia.cantidad_clientes,
-        std::vector<int>(instancia.cantidad_bodegas, 0)
-    );
+    solucion.envios.assign(instancia.cantidad_clientes, vector<int>(instancia.cantidad_bodegas, 0));
     solucion.demanda_satisfecha.assign(instancia.cantidad_clientes, 0);
     solucion.capacidad_usada.assign(instancia.cantidad_bodegas, 0);
     solucion.bodega_abierta.assign(instancia.cantidad_bodegas, false);
@@ -16,7 +15,7 @@ Solucion crear_solucion_vacia(const Instancia& instancia) {
 
 void actualizar_resumen_solucion(const Instancia& instancia, Solucion& solucion) {
     if (static_cast<int>(solucion.envios.size()) != instancia.cantidad_clientes) {
-        throw std::runtime_error("La solucion no coincide con la cantidad de clientes");
+        throw runtime_error("La solucion no coincide con la cantidad de clientes");
     }
 
     solucion.demanda_satisfecha.assign(instancia.cantidad_clientes, 0);
@@ -25,13 +24,13 @@ void actualizar_resumen_solucion(const Instancia& instancia, Solucion& solucion)
 
     for (int cliente = 0; cliente < instancia.cantidad_clientes; ++cliente) {
         if (static_cast<int>(solucion.envios[cliente].size()) != instancia.cantidad_bodegas) {
-            throw std::runtime_error("La solucion no coincide con la cantidad de bodegas");
+            throw runtime_error("La solucion no coincide con la cantidad de bodegas");
         }
 
         for (int bodega = 0; bodega < instancia.cantidad_bodegas; ++bodega) {
             int cantidad = solucion.envios[cliente][bodega];
             if (cantidad < 0) {
-                throw std::runtime_error("La solucion contiene envios negativos");
+                throw runtime_error("La solucion contiene envios negativos");
             }
 
             solucion.demanda_satisfecha[cliente] += cantidad;
@@ -43,8 +42,8 @@ void actualizar_resumen_solucion(const Instancia& instancia, Solucion& solucion)
     }
 }
 
-std::vector<Asignacion> obtener_asignaciones(const Solucion& solucion) {
-    std::vector<Asignacion> asignaciones;
+vector<Asignacion> obtener_asignaciones(const Solucion& solucion) {
+    vector<Asignacion> asignaciones;
 
     for (int cliente = 0; cliente < static_cast<int>(solucion.envios.size()); ++cliente) {
         for (int bodega = 0; bodega < static_cast<int>(solucion.envios[cliente].size()); ++bodega) {

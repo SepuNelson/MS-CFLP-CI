@@ -10,9 +10,11 @@
 #include <stdexcept>
 #include <string>
 
+using namespace std;
+
 namespace {
 void mostrar_uso(const char* programa) {
-    std::cerr << "Uso: " << programa << " <ruta_instancia>\n";
+    cerr << "Uso: " << programa << " <ruta_instancia>\n";
 }
 }
 
@@ -23,36 +25,31 @@ int main(int argc, char* argv[]) {
     }
 
     try {
-        const std::string ruta_instancia = argv[1];
-        auto tiempo_inicio = std::chrono::steady_clock::now();
+        const string ruta_instancia = argv[1];
+        auto tiempo_inicio = chrono::steady_clock::now();
 
         Instancia instancia = leer_instancia(ruta_instancia);
         Solucion solucion = generar_solucion_inicial(instancia);
         ResultadoFactibilidad factibilidad = verificar_factibilidad(instancia, solucion);
 
         if (!factibilidad.factible) {
-            throw std::runtime_error(factibilidad.mensaje);
+            throw runtime_error(factibilidad.mensaje);
         }
 
         DesgloseCosto costo = evaluar_solucion(instancia, solucion);
-        auto tiempo_fin = std::chrono::steady_clock::now();
-        std::chrono::duration<double> tiempo = tiempo_fin - tiempo_inicio;
+        auto tiempo_fin = chrono::steady_clock::now();
+        chrono::duration<double> tiempo = tiempo_fin - tiempo_inicio;
 
         const int semilla = 0;
         const int iteraciones = 0;
 
-        std::cout << costo.costo_total << ' '
-                  << std::fixed << std::setprecision(6) << tiempo.count() << ' '
-                  << semilla << ' '
-                  << iteraciones << '\n';
+        cout << costo.costo_total << ' ' << fixed << setprecision(6) << tiempo.count() << ' ' << semilla << ' ' << iteraciones << '\n';
 
         for (const Asignacion& asignacion : obtener_asignaciones(solucion)) {
-            std::cout << asignacion.cliente + 1 << ' '
-                      << asignacion.bodega + 1 << ' '
-                      << asignacion.cantidad << '\n';
+            cout << asignacion.cliente + 1 << ' ' << asignacion.bodega + 1 << ' ' << asignacion.cantidad << '\n';
         }
-    } catch (const std::exception& error) {
-        std::cerr << "Error: " << error.what() << '\n';
+    } catch (const exception& error) {
+        cerr << "Error: " << error.what() << '\n';
         return 1;
     }
 

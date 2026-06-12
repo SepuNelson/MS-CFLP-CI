@@ -4,19 +4,21 @@
 
 #include <stdexcept>
 
+using namespace std;
+
 DesgloseCosto evaluar_solucion(const Instancia& instancia, const Solucion& solucion) {
     if (!cumple_dimensiones(instancia, solucion)) {
-        throw std::runtime_error("No se puede evaluar una solucion con dimensiones invalidas");
+        throw runtime_error("No se puede evaluar una solucion con dimensiones invalidas");
     }
 
     DesgloseCosto desglose;
-    std::vector<bool> bodega_utilizada(instancia.cantidad_bodegas, false);
+    vector<bool> bodega_utilizada(instancia.cantidad_bodegas, false);
 
     for (int cliente = 0; cliente < instancia.cantidad_clientes; ++cliente) {
         for (int bodega = 0; bodega < instancia.cantidad_bodegas; ++bodega) {
             int cantidad = solucion.envios[cliente][bodega];
             if (cantidad < 0) {
-                throw std::runtime_error("No se puede evaluar una solucion con envios negativos");
+                throw runtime_error("No se puede evaluar una solucion con envios negativos");
             }
 
             if (cantidad > 0) {

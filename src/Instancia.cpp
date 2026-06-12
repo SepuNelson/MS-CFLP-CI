@@ -2,9 +2,11 @@
 
 #include <numeric>
 
+using namespace std;
+
 namespace {
-long long sumar_vector(const std::vector<int>& valores) {
-    return std::accumulate(valores.begin(), valores.end(), 0LL);
+long long sumar_vector(const vector<int>& valores) {
+    return accumulate(valores.begin(), valores.end(), 0LL);
 }
 }
 

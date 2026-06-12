@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+using namespace std;
+
 namespace {
 struct CandidatoCliente {
     int cliente = -1;
@@ -25,8 +27,8 @@ bool puede_asignar_cliente(
     const Instancia& instancia,
     int cliente,
     int bodega,
-    const std::vector<int>& capacidad_restante,
-    const std::vector<int>& bodega_cliente
+    const vector<int>& capacidad_restante,
+    const vector<int>& bodega_cliente
 ) {
     if (capacidad_restante[bodega] < instancia.demanda_cliente[cliente]) {
         return false;
@@ -41,22 +43,11 @@ bool puede_asignar_cliente(
     return true;
 }
 
-int contar_bodegas_factibles(
-    const Instancia& instancia,
-    int cliente,
-    const std::vector<int>& capacidad_restante,
-    const std::vector<int>& bodega_cliente
-) {
+int contar_bodegas_factibles( const Instancia& instancia, int cliente, const vector<int>& capacidad_restante, const vector<int>& bodega_cliente) {
     int cantidad = 0;
 
     for (int bodega = 0; bodega < instancia.cantidad_bodegas; ++bodega) {
-        if (puede_asignar_cliente(
-                instancia,
-                cliente,
-                bodega,
-                capacidad_restante,
-                bodega_cliente
-            )) {
+        if (puede_asignar_cliente( instancia, cliente, bodega, capacidad_restante, bodega_cliente )) {
             ++cantidad;
         }
     }
@@ -64,10 +55,7 @@ int contar_bodegas_factibles(
     return cantidad;
 }
 
-bool es_mejor_cliente(
-    const CandidatoCliente& candidato,
-    const CandidatoCliente& mejor
-) {
+bool es_mejor_cliente( const CandidatoCliente& candidato, const CandidatoCliente& mejor) {
     if (mejor.cliente == -1) {
         return true;
     }
@@ -83,12 +71,7 @@ bool es_mejor_cliente(
     return candidato.cliente < mejor.cliente;
 }
 
-int seleccionar_cliente_greedy(
-    const Instancia& instancia,
-    const std::vector<bool>& cliente_asignado,
-    const std::vector<int>& capacidad_restante,
-    const std::vector<int>& bodega_cliente
-) {
+int seleccionar_cliente_greedy(const Instancia& instancia, const vector<bool>& cliente_asignado, const vector<int>& capacidad_restante, const vector<int>& bodega_cliente) {
     CandidatoCliente mejor;
 
     for (int cliente = 0; cliente < instancia.cantidad_clientes; ++cliente) {
@@ -103,9 +86,9 @@ int seleccionar_cliente_greedy(
         candidato.demanda = instancia.demanda_cliente[cliente];
 
         if (candidato.cantidad_bodegas_factibles == 0) {
-            throw std::runtime_error(
+            throw runtime_error(
                 "No existe bodega factible para el cliente " +
-                std::to_string(cliente + 1)
+                to_string(cliente + 1)
             );
         }
 
@@ -130,13 +113,7 @@ bool es_mejor_bodega(const CandidatoBodega& candidato, const CandidatoBodega& me
     return candidato.bodega < mejor.bodega;
 }
 
-int seleccionar_bodega_greedy(
-    const Instancia& instancia,
-    int cliente,
-    const std::vector<int>& capacidad_restante,
-    const std::vector<int>& bodega_cliente,
-    const std::vector<bool>& bodega_abierta
-) {
+int seleccionar_bodega_greedy(const Instancia& instancia, int cliente, const vector<int>& capacidad_restante, const vector<int>& bodega_cliente, const vector<bool>& bodega_abierta) {
     CandidatoBodega mejor;
 
     for (int bodega = 0; bodega < instancia.cantidad_bodegas; ++bodega) {
@@ -165,27 +142,27 @@ int seleccionar_bodega_greedy(
 
 Solucion generar_solucion_inicial_greedy(const Instancia& instancia) {
     if (!instancia.dimensiones_validas()) {
-        throw std::runtime_error("No se puede inicializar una instancia invalida");
+        throw runtime_error("No se puede inicializar una instancia invalida");
     }
 
     if (instancia.capacidad_total() < instancia.demanda_total()) {
-        throw std::runtime_error("La capacidad total no alcanza para cubrir la demanda total");
+        throw runtime_error("La capacidad total no alcanza para cubrir la demanda total");
     }
 
     Solucion solucion = crear_solucion_vacia(instancia);
-    std::vector<int> capacidad_restante = instancia.capacidad_bodega;
-    std::vector<int> bodega_cliente(instancia.cantidad_clientes, -1);
-    std::vector<bool> bodega_abierta(instancia.cantidad_bodegas, false);
-    std::vector<bool> cliente_asignado(instancia.cantidad_clientes, false);
+    vector<int> capacidad_restante = instancia.capacidad_bodega;
+    vector<int> bodega_cliente(instancia.cantidad_clientes, -1);
+    vector<bool> bodega_abierta(instancia.cantidad_bodegas, false);
+    vector<bool> cliente_asignado(instancia.cantidad_clientes, false);
 
     for (int paso = 0; paso < instancia.cantidad_clientes; ++paso) {
         int cliente = seleccionar_cliente_greedy(instancia, cliente_asignado, capacidad_restante, bodega_cliente);
         int mejor_bodega = seleccionar_bodega_greedy(instancia, cliente, capacidad_restante, bodega_cliente, bodega_abierta);
 
         if (mejor_bodega == -1) {
-            throw std::runtime_error(
+            throw runtime_error(
                 "No se encontro bodega factible para el cliente " +
-                std::to_string(cliente + 1)
+                to_string(cliente + 1)
             );
         }
 
@@ -199,7 +176,7 @@ Solucion generar_solucion_inicial_greedy(const Instancia& instancia) {
     actualizar_resumen_solucion(instancia, solucion);
     ResultadoFactibilidad resultado = verificar_factibilidad(instancia, solucion);
     if (!resultado.factible) {
-        throw std::runtime_error("La solucion inicial no es factible: " + resultado.mensaje);
+        throw runtime_error("La solucion inicial no es factible: " + resultado.mensaje);
     }
 
     return solucion;
