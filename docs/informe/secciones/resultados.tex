@@ -1,0 +1,86 @@
+\section{Resultados}
+
+\noindent Los resultados fueron obtenidos a partir de cinco semillas distintas: \(101\), \(202\), \(303\), \(404\) y \(505\). En todos los casos, las soluciones reportadas fueron factibles, ya que el programa verifica el cumplimiento de demanda, capacidad e incompatibilidades antes de entregar el resultado final.\\
+
+\noindent La Tabla~\ref{tab:epsilon} muestra el efecto del parámetro \(\epsilon\) sobre la instancia wlp01.in. Se observa que la configuración determinística, con \(\epsilon = 0\), obtiene siempre el mismo costo, lo que confirma la ausencia de diversificación. Al incorporar aleatoriedad, el costo promedio disminuye considerablemente. El mejor promedio se obtiene con \(\epsilon = 0.20\), aunque \(\epsilon = 0.10\) alcanza la mejor corrida individual. Por esta razón, se selecciona \(\epsilon = 0.20\) para los experimentos restantes, al presentar el mejor comportamiento promedio.
+
+\begin{table}[H]
+\centering
+\caption{Ajuste de \(\epsilon\) en wlp01.in con 5 reinicios, 30 iteraciones y 5 semillas.}
+\label{tab:epsilon}
+\begin{tabular}{rrrrr}
+\toprule
+\(\epsilon\) & Costo promedio & Mejor costo & Peor costo & Tiempo promedio (s) \\
+\midrule
+0.00 & 47249.0 & 47249 & 47249 & 0.035 \\
+0.10 & 41704.8 & 39285 & 42867 & 0.038 \\
+0.20 & 40666.0 & 39540 & 41413 & 0.040 \\
+0.40 & 41655.4 & 41172 & 42273 & 0.043 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent La Tabla~\ref{tab:resultados-generales} compara la construcción greedy, el Hill Climbing determinístico y la versión con reinicios. Los valores corresponden al promedio de las cinco semillas. En todas las instancias, la búsqueda local mejora la solución greedy inicial, y la versión con reinicios obtiene los menores costos. Esto evidencia que la combinación entre una construcción \(\epsilon\)-greedy y reinicios permite explorar regiones distintas del espacio de búsqueda.
+
+\begin{table}[H]
+\centering
+\caption{Resultados promedio sobre 5 semillas.}
+\label{tab:resultados-generales}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Instancia & Bod. & Cli. & Greedy & HC det. & HC restart & Mejor & Mejora \% \\
+\midrule
+\texttt{toy.in}   & 4   & 10   & 8586.0   & 7989.0   & 6801.0   & 6757   & 20.79 \\
+\texttt{wlp01.in} & 50  & 115  & 53661.0  & 47249.0  & 40666.0  & 39540  & 24.22 \\
+\texttt{wlp02.in} & 100 & 253  & 117872.0 & 103323.0 & 90242.2  & 85181  & 23.44 \\
+\texttt{wlp03.in} & 150 & 345  & 150386.0 & 135650.0 & 116414.4 & 115082 & 22.59 \\
+\texttt{wlp04.in} & 200 & 479  & 192426.0 & 183794.0 & 166165.4 & 160350 & 13.65 \\
+\texttt{wlp05.in} & 250 & 601  & 238818.0 & 229106.0 & 208611.0 & 204281 & 12.65 \\
+\texttt{wlp06.in} & 300 & 705  & 273461.0 & 263636.0 & 233144.4 & 231395 & 14.74 \\
+\texttt{wlp07.in} & 400 & 1012 & 382809.0 & 371740.0 & 340005.2 & 335820 & 11.18 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent En las instancias pequeñas y medianas, la mejora respecto de la solución greedy se mantiene cercana o superior al \(20\%\). En las instancias grandes, la mejora porcentual disminuye, pero sigue siendo consistente. Esto se explica porque, al crecer el número de clientes y bodegas, también aumenta el tamaño del vecindario y se vuelve más difícil explorar una proporción significativa del espacio de soluciones con la misma cantidad de iteraciones.
+
+\noindent La Tabla~\ref{tab:tiempos} presenta el tiempo promedio de la versión con reinicios. Como era esperable, el costo computacional aumenta con el tamaño de la instancia, debido a que en cada iteración se evalúan más movimientos posibles entre clientes y bodegas. Aun así, los tiempos se mantienen razonables para una primera implementación heurística.
+
+\begin{table}[H]
+\centering
+\caption{Tiempo promedio de HC con reinicios sobre 5 semillas.}
+\label{tab:tiempos}
+\begin{tabular}{lrr}
+\toprule
+Instancia & Tiempo promedio (s) & Mejor costo obtenido \\
+\midrule
+\texttt{toy.in}   & 0.003  & 6757 \\
+\texttt{wlp01.in} & 0.040  & 39540 \\
+\texttt{wlp02.in} & 0.250  & 85181 \\
+\texttt{wlp03.in} & 0.916  & 115082 \\
+\texttt{wlp04.in} & 1.515  & 160350 \\
+\texttt{wlp05.in} & 3.373  & 204281 \\
+\texttt{wlp06.in} & 5.682  & 231395 \\
+\texttt{wlp07.in} & 17.358 & 335820 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Para analizar la convergencia, se utilizó la instancia wlp03.in variando el número máximo de iteraciones por reinicio. La Tabla~\ref{tab:convergencia} muestra que, a medida que aumenta el número de iteraciones, el costo promedio disminuye. Las mejoras son progresivas, aunque cada aumento de iteraciones implica un mayor esfuerzo computacional. Este comportamiento es coherente con una búsqueda local, ya que las primeras iteraciones suelen encontrar mejoras rápidas y luego el algoritmo se aproxima gradualmente a óptimos locales.
+
+\begin{table}[H]
+\centering
+\caption{Análisis de convergencia en wlp03.in con \(\epsilon = 0.20\), 5 reinicios y 5 semillas.}
+\label{tab:convergencia}
+\begin{tabular}{rrrrr}
+\toprule
+Iteraciones por reinicio & Costo promedio & Mejor costo & Tiempo promedio (s) & Mejora \% \\
+\midrule
+0  & 130996.6 & 129455 & 0.673 & 0.00 \\
+5  & 127242.2 & 125954 & 0.758 & 2.87 \\
+10 & 124418.0 & 123166 & 0.683 & 5.02 \\
+20 & 119984.2 & 118512 & 0.880 & 8.41 \\
+30 & 116414.4 & 115082 & 0.900 & 11.13 \\
+\bottomrule
+\end{tabular}
+\end{table}

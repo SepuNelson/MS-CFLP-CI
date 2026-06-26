@@ -1,0 +1,97 @@
+\section{Modelo matemático}
+
+\noindent En esta sección se presenta un modelo matemático para el Multi-Source Capacitated Facility Location Problem with Customer Incompatibilities (MS-CFLP-CI). Este modelo representa las decisiones de apertura de bodegas, asignación de demanda de clientes y control de incompatibilidades. La formulación corresponde a un modelo de programación lineal entera mixta, ya que combina variables binarias con variables de cantidad o flujo \cite{maia2023metaheuristic,mansini2022kernel,ceschia2024multineighborhood}.
+
+\subsection{Conjuntos}
+
+\noindent Sea $I$ el conjunto de bodegas candidatas y sea $J$ el conjunto de clientes. Además, se define $P$ como el conjunto de pares de clientes incompatibles. Si $(a,b) \in P$, entonces los clientes $a$ y $b$ no pueden ser atendidos por una misma bodega.
+
+\subsection{Parámetros}
+
+\noindent Los parámetros considerados son los siguientes:
+
+\begin{itemize}
+    \item $C_i$: capacidad máxima de la bodega $i$.
+    \item $FC_i$: costo fijo de apertura de la bodega $i$.
+    \item $G_j$: demanda total del cliente $j$.
+    \item $SC_{ji}$: costo unitario de operación por satisfacer demanda del cliente $j$ desde la bodega $i$.
+\end{itemize}
+
+\subsection{Variables de decisión}
+
+\noindent El modelo utiliza las siguientes variables:
+
+\begin{itemize}
+    \item $y_i \in \{0,1\}$: toma valor $1$ si la bodega $i$ es abierta, y $0$ en caso contrario.
+    \item $x_{ji} \in \mathbb{Z}_{\geq 0}$: cantidad de demanda del cliente $j$ satisfecha desde la bodega $i$.
+    \item $z_{ji} \in \{0,1\}$: toma valor $1$ si el cliente $j$ recibe una cantidad positiva de productos desde la bodega $i$, y $0$ en caso contrario.
+\end{itemize}
+
+\noindent La variable $x_{ji}$ permite representar la característica principal del MS-CFLP-CI, ya que un cliente puede recibir demanda desde más de una bodega. Por otra parte, la variable $z_{ji}$ permite identificar si existe una asignación efectiva entre un cliente y una bodega, lo que resulta necesario para controlar las incompatibilidades entre clientes.
+
+\subsection{Función objetivo}
+
+\noindent El objetivo es minimizar el costo total de la solución, compuesto por los costos fijos de apertura de bodegas y los costos operacionales asociados al envío de demanda.
+
+\begin{equation}
+\min
+\left\{
+\sum_{i \in I} FC_i y_i
++
+\sum_{j \in J} \sum_{i \in I} SC_{ji} x_{ji}
+\right\}
+\end{equation}
+
+\noindent El primer término representa el costo de abrir las bodegas utilizadas, mientras que el segundo término representa el costo de satisfacer la demanda de los clientes desde dichas bodegas.
+
+\subsection{Restricciones}
+
+\noindent Cada cliente debe tener su demanda completamente satisfecha. La demanda puede ser cubierta por una o varias bodegas.
+
+\begin{equation}
+\sum_{i \in I} x_{ji} = G_j \quad \forall j \in J
+\end{equation}
+
+\noindent Cada bodega solo puede operar hasta su capacidad máxima. Además, si una bodega no está abierta, no puede enviar productos a ningún cliente.
+
+\begin{equation}
+\sum_{j \in J} x_{ji} \leq C_i y_i \quad \forall i \in I
+\end{equation}
+
+\newpage
+
+\noindent Las siguientes restricciones relacionan la cantidad enviada con la variable de asignación. Si el cliente $j$ no está asignado a la bodega $i$, entonces no puede recibir demanda desde ella. A su vez, si $z_{ji}$ toma valor $1$, se exige que exista una cantidad positiva enviada desde la bodega $i$ hacia el cliente $j$.
+
+\begin{equation}
+x_{ji} \leq G_j z_{ji} \quad \forall j \in J, \forall i \in I
+\end{equation}
+
+\begin{equation}
+x_{ji} \geq z_{ji} \quad \forall j \in J, \forall i \in I
+\end{equation}
+
+\noindent También se exige que un cliente solo pueda ser atendido por una bodega que esté abierta.
+
+\begin{equation}
+z_{ji} \leq y_i \quad \forall j \in J, \forall i \in I
+\end{equation}
+
+\noindent Finalmente, se incorporan las incompatibilidades entre clientes. Si dos clientes son incompatibles, no pueden ser atendidos por una misma bodega.
+
+\begin{equation}
+z_{ai} + z_{bi} \leq 1 \quad \forall (a,b) \in P, \forall i \in I
+\end{equation}
+
+\noindent El dominio de las variables queda definido como:
+
+\begin{equation}
+y_i \in \{0,1\} \quad \forall i \in I
+\end{equation}
+
+\begin{equation}
+z_{ji} \in \{0,1\} \quad \forall j \in J, \forall i \in I
+\end{equation}
+
+\begin{equation}
+x_{ji} \in \mathbb{Z}_{\geq 0} \quad \forall j \in J, \forall i \in I
+\end{equation}

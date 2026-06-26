@@ -1,0 +1,25 @@
+\section{Descripción del Algoritmo}
+
+\noindent Para resolver el MS-CFLP-CI se propone un algoritmo basado en Hill Climbing con estrategia de Best Improvement y múltiples reinicios. Esta elección se justifica porque el problema posee un espacio de búsqueda amplio y restringido por condiciones de capacidad, demanda e incompatibilidad entre clientes. En este contexto, la búsqueda local permite mejorar progresivamente una solución factible, mientras que los reinicios incorporan diversificación y reducen la dependencia respecto de una única solución inicial.\\
+
+\noindent El algoritmo comienza con la generación de una solución inicial factible mediante una construcción greedy aleatorizada. En este proceso, los clientes se asignan a bodegas que respeten la capacidad disponible y las restricciones de incompatibilidad. Normalmente se priorizan asignaciones de menor costo incremental, pero se incorpora un componente aleatorio que permite seleccionar alternativas distintas dentro de un conjunto de candidatos factibles. Este parámetro de aleatoriedad favorece que cada reinicio explore una región diferente del espacio de soluciones.\\
+
+\noindent Una vez construida la solución inicial, se aplica una búsqueda local mediante Hill Climbing Best Improvement. En cada iteración se genera un vecindario a partir de la solución actual. Los movimientos utilizados modifican la matriz de envíos, por ejemplo, reasignando la demanda de un cliente hacia otra bodega factible, redistribuyendo parcialmente su demanda entre distintas bodegas o eliminando envíos que permitan cerrar una instalación cuando esta deja de ser utilizada. Estos operadores son coherentes con la representación elegida, ya que actúan directamente sobre las cantidades enviadas y permiten modificar las decisiones de apertura y asignación.\\
+
+\noindent La estrategia Best Improvement evalúa todos los vecinos factibles generados en una iteración y selecciona aquel que produzca la mayor reducción en la función objetivo. Sea \(S\) la solución actual y \(N(S)\) su vecindario factible, se selecciona una solución \(S'\) tal que:
+
+\[
+S' = \arg\min_{S_k \in N(S)} FO(S_k),
+\]
+
+\noindent siempre que se cumpla:
+
+\[
+FO(S') < FO(S).
+\]
+
+\noindent Si ningún vecino factible mejora el valor de la función objetivo, la solución actual se considera un óptimo local y finaliza la búsqueda local de ese reinicio. Aunque esta estrategia puede requerir más tiempo por iteración que First Improvement, permite elegir el mejor movimiento disponible en cada paso, favoreciendo una intensificación más ordenada de la búsqueda.\\
+
+\noindent Para reducir el riesgo de quedar limitado a un óptimo local, se incorpora una estrategia de restart. En cada reinicio se genera una nueva solución inicial factible utilizando una semilla distinta y luego se ejecuta nuevamente la búsqueda local. Al finalizar cada reinicio, el óptimo local obtenido se compara con la mejor solución global encontrada hasta el momento. Si su costo es menor, esta solución pasa a ser la mejor solución conocida.\\
+
+\noindent El algoritmo finaliza cuando se alcanza el número máximo de reinicios, el límite de iteraciones o el tiempo máximo definido. Estos parámetros controlan el esfuerzo computacional del método: un mayor número de reinicios aumenta la diversificación, mientras que un mayor número de iteraciones permite intensificar la búsqueda en cada región explorada. En conjunto, el algoritmo propuesto mantiene un equilibrio entre intensificación y diversificación, lo que resulta apropiado para el MS-CFLP-CI debido a la complejidad generada por las capacidades limitadas, los costos de apertura y las incompatibilidades entre clientes.

@@ -1,0 +1,79 @@
+\documentclass[letter, 10pt]{article} 
+\usepackage[utf8]{inputenc} 
+\usepackage[spanish]{babel} 
+\usepackage{amsfonts} 
+\usepackage{amsmath} 
+\usepackage{graphicx} 
+\usepackage{url} 
+\usepackage{booktabs} 
+\usepackage{float} 
+\usepackage{pgfplots} 
+\pgfplotsset{compat=1.18} \usepackage[top=3cm,bottom=3cm,left=3.5cm,right=3.5cm,footskip=1.5cm,headheight=1.5cm,headsep=.5cm]{geometry}
+
+
+
+\begin{document}
+\title{Inteligencia Artificial \\ \begin{Large}Estado del arte del problema de localización de instalaciones capacitadas con incompatibilidades entre clientes
+\end{Large}}
+\author{Nelson Antonio Sepúlveda Valenzuela}
+\date{\today}
+\maketitle
+
+
+%--------------------No borrar esta secci\'on--------------------------------%
+\section*{Evaluaci\'on}
+
+\begin{tabular}{ll}
+Resumen (5\%): & \underline{\hspace{2cm}} \\
+Introducci\'on (5\%):  & \underline{\hspace{2cm}} \\
+Definici\'on del Problema (10\%):  & \underline{\hspace{2cm}} \\
+Estado del Arte (40\%):  & \underline{\hspace{2cm}} \\
+Modelo Matem\'atico (20\%): &  \underline{\hspace{2cm}}\\
+Conclusiones (15\%): &  \underline{\hspace{2cm}}\\
+Bibliograf\'ia (5\%): & \underline{\hspace{2cm}}\\
+ &  \\
+\textbf{Nota Final (100\%)}:   & \underline{\hspace{2cm}}
+\end{tabular}
+%---------------------------------------------------------------------------%
+\vspace{2cm}
+
+% Resumen %
+\begin{abstract}
+\noindent Este informe estudia el Multi-Source Capacitated Facility Location Problem with Customer Incompatibilities (MS-CFLP-CI), variante del problema de localización de instalaciones capacitadas. El problema busca decidir qué bodegas abrir y cómo distribuir la demanda de los clientes, considerando costos, capacidades e incompatibilidades. Además, se presenta una representación computacional de las soluciones, una búsqueda local basada en Hill Climbing + Restart y casos de prueba para evaluar su comportamiento. La variante multi-source permite atender clientes desde más de una bodega, aumentando la flexibilidad y complejidad. Finalmente, se exponen conclusiones del estudio bibliográfico y experimental.
+\end{abstract}
+
+% Introducción %
+\input{secciones/introduccion}
+
+% Definición del Problema %
+\input{secciones/definicion_problema}
+
+% Estado del Arte %
+\input{secciones/estado_arte}
+
+% Modelo Matemático %
+\input{secciones/modelo_matematico}
+
+% Representación %
+\input{secciones/representacion}
+
+% Descripción del algoritmo %
+\input{secciones/descripcion_algoritmo}
+
+% Experimentos %
+\input{secciones/experimentos}
+
+% Resultados %
+\input{secciones/resultados}
+
+% Conclusiones %
+\input{secciones/conclusiones}
+
+% Uso LLMs %
+\input{secciones/uso_llms}
+
+% Referencias %
+\bibliographystyle{plain}
+\bibliography{Referencias}
+
+\end{document} 

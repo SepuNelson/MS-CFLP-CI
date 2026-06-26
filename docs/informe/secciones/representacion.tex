@@ -1,0 +1,28 @@
+\section{Representación}
+
+\noindent Para representar una solución del MS-CFLP-CI se utiliza una matriz de envíos, cuyas filas corresponden a los clientes y cuyas columnas corresponden a las bodegas candidatas. Cada elemento \(x_{ji}\) indica la cantidad de demanda del cliente \(j\) que es satisfecha desde la bodega \(i\).\\
+
+\noindent Esta representación es apropiada para la variante multi-source, ya que permite que un mismo cliente sea atendido por más de una bodega. En consecuencia, una fila puede contener varios valores positivos, indicando que la demanda del cliente se divide entre distintas instalaciones. Esta característica permite representar soluciones que no serían posibles en una variante single-source, donde cada cliente solo podría ser asignado a una bodega.\\
+
+\noindent Por ejemplo, una solución con tres clientes y dos bodegas puede representarse como:
+
+\[
+X =
+\begin{pmatrix}
+5 & 0 \\
+2 & 4 \\
+0 & 6
+\end{pmatrix}
+\]
+
+\noindent En esta matriz, el primer cliente es atendido completamente por la primera bodega, el segundo cliente recibe productos desde ambas bodegas y el tercer cliente es atendido solo por la segunda bodega. Por lo tanto, la representación permite expresar directamente el carácter multi-source del problema.\\
+
+\noindent A partir de la matriz se puede evaluar la factibilidad de una solución. La demanda de cada cliente se obtiene sumando los valores de su fila, mientras que la capacidad utilizada por cada bodega se calcula sumando los valores de su columna. 
+
+\noindent Además, la apertura de una bodega se determina a partir de la misma matriz. Si una columna posee al menos un valor positivo, entonces la bodega correspondiente se considera abierta y se incorpora su costo fijo en la función objetivo. Si todos los valores de la columna son cero, la bodega no participa en la solución.\\
+
+\noindent Las incompatibilidades entre clientes también se verifican mediante la matriz de envíos. Para cada par de clientes incompatibles \((a,b)\), no debe existir una bodega \(i\) desde la cual ambos reciban una cantidad positiva. 
+
+\noindent La representación mantiene una relación directa con las soluciones del problema, ya que cada matriz factible define una asignación válida de demanda y cada asignación válida puede expresarse mediante una matriz de este tipo. Además, no excluye soluciones óptimas, pues permite representar cualquier distribución de demanda entre bodegas que respete las restricciones del MS-CFLP-CI.\\
+
+\noindent Esta estructura también se complementa adecuadamente con el método Hill Climbing + Restart, ya que los movimientos pueden definirse como modificaciones sobre los valores de la matriz, tales como reasignar demanda entre bodegas, abrir o cerrar instalaciones utilizadas, o redistribuir parcialmente la demanda de un cliente. De esta manera, la representación permite explorar soluciones factibles e infactibles durante la búsqueda, manteniendo una forma simple e informativa para evaluar costos, capacidades e incompatibilidades.
